@@ -1,0 +1,53 @@
+<div class="masthead" style="background:#999;width:100%;float:left">
+    <nav style="width:12%;float:left">
+        <ul class="nav nav-justified" style="background:#999">
+            <li><a href="/company/index?id=<%=@com_id%>">返回部门列表</a></li>  
+        </ul>
+    </nav>
+    <div style="float:right;margin-top:10px;margin-right:16px">
+        	欢迎:<%=session[:user_name]%>&nbsp<a href="/user/logout">退出</a>
+    </div>
+</div>
+
+<h3>查看日志</h3>
+
+<table class="table table-hover">
+	<tr>
+		<th>时间</th>
+		<th>操作</th>
+		<th>操作人</th>
+	</tr>
+
+	<%@oplogs.each do |oplog|%>
+	<tr>
+		<td><%=oplog.time%></td>
+		<td><%=oplog.desc%></td>
+		<td><%=oplog.user_id%></td>
+	</tr>
+	<%end%>
+</table>
+
+<style>
+	body{
+		margin-top: -20px;
+		background: url("/assets/bkg2.png");
+	}
+	li{
+		border-right:1px solid white;
+	}
+	li a{
+		color: #fff;
+		font-size:16px;
+	}
+	th,td{
+		text-align: center;
+		font-size:15px;
+		background: #fff;
+	}
+	th{
+		background: #e8e8e8;
+	}
+	table,td,th{
+		border: #ccc 1px solid;
+	}
+</style>

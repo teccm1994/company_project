@@ -1,0 +1,240 @@
+<div class="masthead" style="background:#999;width:100%;float:left">
+  <nav style="width:65%;float:left">
+    <ul class="nav nav-justified" style="background:#999">
+      <li class="active"><a href="#">Home</a></li>
+      <li><a href="/company/index?id=<%=@cur_com.pre_id%>">上级部门</a></li>
+      <li><a href="/company/create?id=<%=@pre_id%>" class="add_c">新增部门</a></li>
+      <li><a href="/doc/new?id=<%=@cur_com.id%>">查看文档</a></li>
+      <li><a href="<%=@cur_com.id%>" class="count_c">文档统计</a></li>
+      <li><a href="/user/show?com_id=<%=@cur_com.id%>">查看员工</a></li>
+      <li><a href="/operationlog/index">查看日志</a></li>
+    </ul>
+  </nav>
+  <div style="float:right;margin-top:10px;margin-right:16px">
+    欢迎:<%=session[:user_name]%>&nbsp<a href="/user/logout">退出</a>
+  </div>
+</div>
+
+<h4>当前部门>><%=@cur_com.name%></h4>
+
+<table class="table table-hover">
+	<tr>
+		<th>部门</th>
+		<th>编号</th>
+		<th>上级部门编号</th>
+		<th colspan="2" width="25%">操作</th>
+	</tr>
+
+	<%@companies.each do |company|%>
+  	<tr>
+  		<td><%=company.name%></td>
+  		<td><%=company.id%></td>
+  		<td><%=company.pre_id%></td>
+  		<td>
+  			<a href="/company/index?id=<%=company.id%>">下属部门</a>
+  		</td>
+  		<td>
+  			<a href="/company/update?id=<%=company.id%>" class="update_c">更新</a>
+  		</td>
+  	</tr>
+	<%end%>
+</table>
+
+<div id="company_edit_div">
+	<label style="font-size:16px;margin-left:38px;margin-top:10px">更新部门</label>
+	<form action="/company/update2" method="post">
+  	<div class="form-group" style="margin:0 auto;width:80%">
+    	<label for="forusername">部门名称:</label>
+    	<input type="text" name="name"  class="form-control" id="forusername" placeholder="部门名称">
+ 		</div>
+  		
+    <input type="hidden" name="id" />
+ 		<input type = "hidden" name = "com_id"/>
+  	<button style="margin-left:39px;width:100px;margin-top:15px;margin-bottom:10px" type="submit" class="btn btn-default">提交</button>
+  	<input type="button" class="btn btn-default" style="margin-left:10px;width:100px;margin-top:15px;margin-bottom:10px"  value="取消" name="cancle_btn" />
+	</form>
+</div>
+
+<div id="count_div">
+	<div id="main" ></div>
+	<div style="width:100%;height:25px;background:#e8e8e8">
+		<input type="button" value="确定" btn btn-default id="doc_count_s" style="margin-top:0px;width:100px;margin-left:200px;">
+	</div>
+</div>
+
+<style>
+  body{
+  	margin-top: -10px;
+  	background: url("/assets/bkg2.png");
+  }
+  li{
+  	border-right:1px solid white;
+  }
+  li a{
+  	color: #fff;
+  	font-size:16px;
+  }
+  th,td{
+  	text-align: center;
+  	font-size:15px;
+  	background: #fff;
+  }
+  th{
+  	background: #e8e8e8;
+  }
+  table,td,th{
+  	border: #ccc 1px solid;
+  }
+  #main{
+  	width:100%;height:300px;
+  }
+  #count_div{
+  	width:500px;height:325px;display:none;position:absolute;z-index:21;border-radius:10px;
+  	left:50%;margin-left: -250px;top:70px;
+  }
+
+  #company_edit_div{width:30%;height:175px;background:#e8e8e8;left:50%;margin-left:-20%;top:100px;display:none;position:absolute;z-index:21;border-radius:10px}
+</style>
+
+<script type="text/javascript">
+ 	$(document).on('click',".update_c",function(){
+ 		$("#company_edit_div").show();
+ 		$("#company_edit_div input[name='name'] ").val($(this).parent().parent().children().eq(0).html());
+ 		$("#company_edit_div input[name='id'] ").val($(this).parent().parent().children().eq(1).html());
+ 		$("#company_edit_div input[name='com_id'] ").val($(this).parent().parent().children().eq(2).html());
+ 		$("#company_edit_div form").attr("action","/company/update2");	
+ 		return false;
+ 	});
+ 	
+	$("#company_edit_div input[name='cancle_btn']").click(function(){
+ 		$("#company_edit_div").hide();
+	});
+
+	$(".add_c").click(function(){
+		var url = $(this).attr("href");
+ 		$("#company_edit_div").show();
+
+ 		$("#company_edit_div input[name='name'] ").val("");
+ 		$("#company_edit_div input[name='id'] ").val("");
+		var allVars = $.getUrlVars();
+		var id_a = $.getUrlVar("id");
+		if(id_a==""){
+			id_a = 1 ;
+		}
+		$("#company_edit_div input[name='com_id'] ").val(id_a);
+ 		$("#company_edit_div label").eq(0).html("新增部门");
+
+ 		$("#company_edit_div form").attr("action","/company/add");	
+		return false;
+	});
+
+ 	$.extend({
+  		getUrlVars: function(){
+   		var vars = [], hash;
+    	var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    	for(var i = 0; i < hashes.length; i++)
+    		{
+     			hash = hashes[i].split('=');
+      		vars.push(hash[0]);
+      		vars[hash[0]] = hash[1];
+  		  }
+    		return vars;
+  		},
+  		getUrlVar: function(name){
+   			return $.getUrlVars()[name];
+  		}
+	});
+</script>
+
+<script src="http://echarts.baidu.com/build/dist/echarts-all.js"></script>
+<script type="text/javascript">
+  $("#doc_count_s").click(function(){
+ 	$("#count_div").hide();
+  });
+  $(".count_c").click(function(){
+	$("#count_div").show();
+	var byName = $(this).attr("href");
+	var name_s = new Array();
+ 	var count_s = new Array();
+ 	var count_2 = new Array();
+ 	var url_n = "/doc/getCompanyName?com_id="+byName;
+	$.ajax({
+          type: 'get',
+          url: url_n,
+          async:false,
+          success: function(data){
+            data = eval(data);
+            $.each(data, function(i, item){
+              name_s.push(item.name);
+            })
+          }
+        }); 
+	var url_c = "/doc/getDocCount?com_id="+byName;
+	$.ajax({
+          type: 'get',
+          url: url_c,
+          async:false,
+          success: function(data){
+            for(var i=0;i<data.length;i++){
+              count_s.push(data[i]);
+              count_2.push(data[i+1]);
+              i += 1;
+            }               
+          }
+       });       	
+//基于准备好的dom，初始化echarts图表
+  var myChart = echarts.init(document.getElementById('main')); 
+  var option = {
+    title:{
+      text:'各部门提交的文档数'
+    },
+    backgroundColor:'#e8e8e8',
+    color:['#0000ff','#5555ff'],
+    tooltip: {
+      show: true
+    },
+    toolbox:{
+      show:true,
+        feature:{
+          mark:{show:true},
+          dataView:{show:true,readOnly:false},
+          magicType:{show:true,type:['line','bar']},
+          restore:{show:true}
+        }
+    },
+    legend: {
+      data:['文档数']
+    },
+    xAxis : [
+      {
+        type : 'category',
+        data :name_s
+      }
+    ],
+    yAxis : [
+      {
+        type : 'value'
+      }
+    ],
+    series : [
+      {
+        "name":"文档总数",
+        "type":"bar",
+        "data":count_s
+      },
+      {
+        "name":"已审阅数",
+        "type":"bar",
+        "data":count_2
+      }
+    ]
+  };
+  // 为echarts对象加载数据 
+  myChart.setOption(option); 
+        return false;
+});
+  // Getting URL var by its nam
+  var byName = $.getUrlVar("id");	
+  $(document).ready(function(){
+});      
+</script>

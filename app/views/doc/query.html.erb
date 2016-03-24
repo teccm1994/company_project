@@ -1,0 +1,70 @@
+<div class="masthead" style="background:#999;width:100%;float:left">
+    <nav style="width:12%;float:left">
+        <ul class="nav nav-justified" style="background:#999">
+            <li><a href="/doc/new?id=<%=@com_id%>">返回文档列表</a></li>      
+        </ul>
+    </nav>
+    <div style="float:right;margin-top:10px;margin-right:16px">
+        	欢迎:<%=session[:user_name]%>&nbsp<a href="/user/logout">退出</a>
+    </div>
+</div>
+
+<h3>文档查询结果</h3>
+
+<table class="table table-hover" >
+	<tr>
+		<th >题目</th>
+		<th>内容</th>
+		<th>部门</th>
+		<th>文档状态</th>
+		<th>发布时间</th>
+		<th>发布人</th>
+		<th>审核状态</th>
+		<th>审核人</th>
+		<th>审核时间</th>
+		<th>批注</th>
+	</tr>
+	<%@docs.each do |doc|%>
+	<tr>
+		<td><%=doc.title%></td>
+		<td><%=doc.content%></td>
+		<td><%=doc.com_id%></td>
+		<td><%=doc.doc_status%></td>
+		<td><%=doc.created_at%></td>
+		<td><%=doc.p_user_id%></td>
+		<td><%=doc.examine_status%></td>
+		<td><%=doc.e_user_id%></td>	
+		<td><%=doc.examine_time%></td>
+		<td><%=doc.comment%></td>	
+	</tr>
+	<%end%>
+</table>
+
+<style>
+	body{
+		margin-top: -0px;
+		background: url("/assets/bkg2.png");
+	}
+	li{
+		border-right:1px solid white;
+	}
+	li a{
+		color: #fff;
+		font-size:16px;
+	}
+	th,td{
+		text-align: center;
+		font-size:15px;
+		background: #fff;
+	}
+	th{
+		background: #e8e8e8;
+	}
+	table,td,th{
+		border: #ccc 1px solid;
+	}
+</style>
+
+
+
+

@@ -1,0 +1,12 @@
+<div style="margin:100px auto;width:40%;border:#e8e8e8 2px solid">
+	<label style="font-size:16px;margin-left:49px;margin-top:10px">文档批注</label>
+	<form action="/doc/comment?id=<%=@doc.id%>" method="post">
+		<div class="form-group" style="margin:0 auto;width:80%">
+		    <label for="forusername">批注内容:</label>
+		    <input type="text" name="comment" class="form-control" id="forusername" placeholder="批注内容">
+	  	</div>
+		<input type = "hidden" name = "id" value="<%=@doc.id%>"/>
+		<input type = "hidden" name = "title" value="<%=@doc.title%>"/>
+		<button style="margin-left:49px;width:100px;margin-top:15px;margin-bottom:10px" type="submit" class="btn btn-default">提交</button>
+	</form>
+</div>

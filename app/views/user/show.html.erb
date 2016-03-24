@@ -1,0 +1,94 @@
+ <div class="masthead" style="background:#999;width:100%;float:left">
+    <nav style="width:24%;float:left">
+        <ul class="nav nav-justified" style="background:#999">
+            <li><a href="/company/index?id=<%=@com_id%>">返回部门列表</a></li>
+            <li><a class="add_u_a" href="/user/tocreate?com_id=<%=@com_id%>">添加用户</a></li>
+        </ul>
+    </nav>
+    <div style="float:right;margin-top:10px;margin-right:16px">
+        	欢迎:<%=session[:user_name]%>&nbsp<a href="/user/logout">退出</a>
+    </div>
+</div>
+
+<h3>用户管理</h3>
+
+<table class="table table-hover">
+	<tr>
+		<th>用户名</th>
+		<th>部门</th>
+		<th>身份</th>
+		<th>操作</th>
+	</tr>
+
+	<%@users.each do |user|%>
+	<tr>
+		<td><%=user.name%></td>
+		<td><%=user.com_id%></td>
+		<td><%=user.user_type%></td>
+
+		<td>
+			<a href="/user/delete?id=<%=user.id%>">删除</a>
+		</td>
+	</tr>
+	<%end%>
+</table>
+
+<div id="add_u_div" >
+	<label style="font-size:16px;margin-left:49px;margin-top:10px">添加用户</label>
+	<form action="/user/create" method="post">
+		<div class="form-group" style="margin:0 auto;width:80%">
+			<label for="forusername">账号:</label>
+			<input type="text" name="name" class="form-control" id="forusername" placeholder="用户名">
+		</div>
+
+		<div class="form-group" style="margin:0 auto;width:80%">
+			<label for="exampleInputPassword1">密码:</label>
+			<input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="密码">
+		</div>
+
+		<div class="form-group" style="margin:0 auto;width:80%">
+			<label for="user_types">类型:</label>
+			<input type="password" name="user_type" class="form-control" id="user_types" placeholder="类型">
+		</div>
+
+		<input type="hidden" name="com_id" value="<%=@com_id%>"/>
+		<button style="margin-left:49px;width:100px;margin-top:15px" type="submit" class="btn btn-default">注册</button>
+		<button style="margin-left:10px;width:100px;margin-top:15px" type="button" id="add_c_b" class="btn btn-default">取消</button>
+	</form>
+</div>
+
+<style>
+	body{
+		margin-top: -20px;
+		background: url("/assets/bkg2.png");
+	}
+	li{
+		border-right:1px solid white;
+	}
+	li a{
+		color: #fff;
+		font-size:16px;
+	}
+	th,td{
+		text-align: center;
+		font-size:15px;
+		background: #fff;
+	}
+	th{
+		background: #e8e8e8;
+	}
+	table,td,th{
+		border: #ccc 1px solid;
+	}
+	#add_u_div{width:40%;background:#e8e8e8;left:50%;margin-left:-20%;top:100px;display:none;position:absolute;z-index:21;border-radius:10px}
+</style>
+
+<script type="text/javascript">
+	$(".add_u_a").click(function(){
+ 		$("#add_u_div").show();
+ 		return false;
+	});
+	$("#add_c_b").click(function(){
+ 		$("#add_u_div").hide();
+	});	
+</script>>

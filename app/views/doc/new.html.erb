@@ -1,0 +1,278 @@
+<div class="masthead" style="background:#999;width:100%;float:left">
+    <nav style="width:12%;float:left">
+        <ul class="nav nav-justified" style="background:#999">
+            <li><a href="/company/index?id=<%=@com_id%>">返回部门列表</a></li>
+        </ul>  
+    </nav>
+
+    <div style="float:right;margin-top:10px;margin-right:16px">
+        	欢迎:<%=session[:user_name]%>&nbsp<a href="/user/logout">退出</a>
+    </div>
+</div>
+
+<h3 class="text-muted">文档管理</h3>
+
+<div>
+	<form class="form-inline"  action="/doc/query" method="post" style="margin-top:10px;margin-bottom:10px;width:100%;float:left">
+		<div class="input-append date form_datetime" style="float:left;width:20%">
+		    <label for="p_time">发布时间</label>
+		    <input size="16" type="text" name="p_time" value="" class="form-control" id="p_time" style="width:75%" readonly>
+		    <span class="add-on"><i class="icon-th"></i></span>
+	    </div>
+
+		<div class="input-append date form_datetime" style="float:left;width:20%">
+		    <label for="examine_time">审核时间</label>
+		    <input size="16" style="width:75%" type="text" name="examine_time" value="" class="form-control" id="examine_time" readonly>
+		    <span class="add-on"><i class="icon-th"></i></span>
+		</div>
+
+	    <div class="form-group">
+		    <label for="examine_status">审核状态</label>
+		    <select name="examine_status">
+		    	<option value="1">已审</option>
+		    	<option value="0">未审</option>
+		    </select>
+		    <input type="hidden" value="<%=@com_id%>"  name="com_id" />
+	  	</div>
+	  
+	  	<button type="submit" style="width:100px;background:#999;color:white" class="btn btn-default", :remote => true>查询</button> 
+	  	 <button type="button"  style="width:100px;background:#999;color:white" class="btn btn-default" id="new_d">新建文档</button> 
+	</form>	
+</div>
+
+<table class="table table-hover" >
+	<tr>	
+		<th>编号</th>
+		<th >题目</th>
+		<th>内容</th>
+		<th>部门</th>
+		<th>文档状态</th>
+		<th>发布时间</th>
+		<th>发布人</th>
+		<th>审核状态</th>
+		<th>审核人</th>
+		<th>审核时间</th>
+		<th>批注</th>
+		<th colspan="6">操作</th>
+	</tr>
+
+	<%@docssss.each do |doc|%>
+	<tr>
+		<td><%=doc.id%></td>
+		<td><%=doc.title%></td>
+		<td><%=doc.content%></td>
+		<td><%=doc.com_id%></td>
+
+		<% if doc.doc_status == 1 %>
+			<td>可用</td>
+		<% else%>
+			<td>不可用</td>
+		<%end%>
+		
+		<td><%=doc.p_time%></td>
+		<td><%=doc.p_user_id%></td>
+
+		<% if doc.examine_status == 1 %>
+			<td>已审</td>
+		<% else%>
+			<td>未审</td>
+		<%end%>
+
+		<td><%=doc.e_user_id%></td>	
+		<td><%=doc.examine_time%></td>
+		<td><%=doc.comment%></td>
+		<td>
+			<a href="/doc/update?id=<%=doc.id%>"  class="d_u_a">编辑</a>
+		</td>
+		<td>
+			<a href="/doc/delete2?id=<%=doc.id%>" class="d_dd_a">删除</a>
+		</td>
+		<td>
+			<a href="/doc/delete3?id=<%=doc.id%>" class="d_sd_a">软删除</a>
+		</td>
+		<td>
+			<a href="/doc/toexamine?id=<%=doc.id%>" class="d_e_a">审批</a>
+		</td>
+		<td>
+			<a href="/doc/recovery?id=<%=doc.id%>" class="d_r_a">恢复</a>
+		</td>
+		<td>
+			<a href="/doc/download?file_path=<%=doc.f_url%>&file_name=<%=doc.f_name%>" >下载</a>
+		</td>
+	</tr>
+	<%end%>
+</table>
+
+<div style="width:15%;float:right">
+	<form action="/doc/new">
+		<input type="hidden" value="<%=@com_id%>" name="id" />
+		<%=@page_num%>/<%=@record_count%>,第<input type="text" name="page_num" style="width:30px">页 <button  type="submit" style="width:100px;background:#999;color:white" class="btn btn-default">跳转</button>
+	</form>
+</div>
+
+<div style="" id="edit_d_div">
+	<label style="font-size:16px;margin-left:49px;margin-top:10px">创建文档</label>
+	<form action="/doc/add" method="post" enctype="multipart/form-data">
+  	<div class="form-group" style="margin:0 auto;width:80%">
+   		<label for="forusername">文档名称:</label>
+   		<input type="text" name="title" class="form-control" id="forusername" placeholder="文档名称">
+  	</div>
+
+	<div class="form-group" style="margin:0 auto;width:80%">
+   		<label for="forusername">文档内容:</label>
+  		<input type="text" name="content" class="form-control" id="forusername" placeholder="文档内容">
+ 	</div>
+ 	 
+ 	<div class="form-group" style="margin:0 auto;width:80%">
+   		<label for="forusername">上传附件:</label>
+  		<input type="file" name="myfile" />
+ 	</div>
+
+	<input type="hidden" name="id" />
+  	<input type = "hidden" name = "com_id" />
+ 		<button style="margin-left:49px;width:100px;margin-top:15px;margin-bottom:10px" type="submit" class="btn btn-default">提交</button>
+ 		<button style="margin-left:49px;width:100px;margin-top:15px;margin-bottom:10px" id="doc_e_c" type="button" class="btn btn-default">取消</button>
+	</form>
+</div>
+
+<div id="edit_examine_div" >
+	<label style="font-size:16px;margin-left:49px;margin-top:10px">文档审批</label>
+	<form action="/doc/examine" method="post">
+	  	<div class="form-group" style="margin:0 auto;width:80%">
+	    	<label for="forusername">审批内容:</label>
+	    	<input type="text" name="comment" class="form-control" id="forusername" placeholder="审批内容">
+	  	</div>
+
+	  	<input type = "hidden" name = "id" />
+	  	<button style="margin-left:49px;width:100px;margin-top:15px;margin-bottom:10px" type="submit" class="btn btn-default">提交</button>
+	  	<button style="margin-left:49px;width:100px;margin-top:15px;margin-bottom:10px" id="examine_e_c" type="button" class="btn btn-default">取消</button>
+	</form>
+</div>
+
+<style>
+	body{
+		margin-top: -20px;
+		background: url("/assets/bkg2.png");
+	}
+	li{
+		border-right:1px solid white;
+	}
+	li a{
+		color: #fff;
+		font-size:16px;
+	}
+	th,td{
+		text-align: center;
+		font-size:14px;
+		background: #fff;
+	}
+	th{
+		background: #e8e8e8;
+	}
+	table,td,th{
+		border: #ccc 1px solid;
+	}
+	#edit_d_div{
+		width:40%;border:#e8e8e8 2px solid;position: absolute;
+		margin-left: -20%;left:50%;top:100px;display: none;z-index: 25;
+		background:#e8e8e8;border-radius:10px;
+	}
+	#edit_examine_div{
+	width:40%;border:#e8e8e8 2px solid;position: absolute;
+	margin-left: -20%;left:50%;top:100px;display: none;z-index: 25;
+	background:#e8e8e8;border-radius:10px;
+	}
+</style>
+
+<script type="text/javascript">
+	//edit_div cancle
+	$("#doc_e_c").click(function(){
+		$("#edit_d_div").hide();
+	});
+	//examine_div cacle
+	$("#examine_e_c").click(function(){
+		$("#edit_examine_div").hide();
+	});
+
+	//add
+	$("#new_d").click(function(){
+		$("#edit_d_div").show();
+		$("#edit_d_div label").eq(0).html("新建文档");
+		$("#edit_d_div form").attr("action","/doc/add");
+
+		//$("#edit_d_div input[name='id']").val($(this).parent().parent().children().eq(0).html());
+		$("#edit_d_div input[name='title']").val("");
+		$("#edit_d_div input[name='content']").val("");
+		var byName = $.getUrlVar("id");
+		$("#edit_d_div input[name='com_id']").val(byName);
+		
+		//return false;
+	});
+	//update
+	$(document).on('click',".d_u_a",function(){
+		$("#edit_d_div").show();
+		$("#edit_d_div label").eq(0).html("编辑文档");
+		$("#edit_d_div form").attr("actioin","/doc/update2");
+
+		$("#edit_d_div input[name='id']").val($(this).parent().parent().children().eq(0).html());
+		$("#edit_d_div input[name='title']").val($(this).parent().parent().children().eq(1).html());
+		$("#edit_d_div input[name='content']").val($(this).parent().parent().children().eq(2).html());
+		//$("#edit_d_div input[name='com_id']").val($(this).parent().parent().children().eq(2).html());
+		
+		return false;
+	});
+	//delete
+	$(document).on('click',".d_dd_a",function(){
+		if(confirm("删除后不可恢复！确定删除？")){
+	 		url = $(this).attr("href");
+	 		window.location.href = url;		
+	 	}
+		return false;
+	});
+	//soft_delete
+	$(document).on('click',".d_sd_a",function(){
+		if(confirm("删除后可恢复！确定删除？")){
+	 		url = $(this).attr("href");
+	 		window.location.href = url;
+	 	}
+		return false;
+	});
+	//examine
+	$(document).on('click',".d_e_a",function(){
+		$("#edit_examine_div").show();
+		$("#edit_examine_div input[name='id']").val($(this).parent().parent().children().eq(0).html());
+
+		return false;
+	});
+	//recovery
+	$(document).on('click',".d_r_a",function(){
+		if(confirm("确定恢复？")){
+	 		url = $(this).attr("href");
+	 		window.location.href = url;
+	 	}
+		return false;
+	});
+
+ 	$.extend({
+  		getUrlVars: function(){
+   		var vars = [], hash;
+    	var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    	for(var i = 0; i < hashes.length; i++)
+    		{
+     			hash = hashes[i].split('=');
+      			vars.push(hash[0]);
+      			vars[hash[0]] = hash[1];
+  			}
+    		return vars;
+  		},
+  		getUrlVar: function(name){
+   			return $.getUrlVars()[name];
+  		}
+	});
+</script>
+
+<script type="text/javascript">
+    $(".form_datetime").datetimepicker({
+        format: "yyyy-mm-dd hh:ii"
+    });
+</script> 

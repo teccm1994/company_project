@@ -1,0 +1,21 @@
+<div style="margin:100px auto;width:30%;border:#e8e8e8 2px solid;height:250px;border-radius:10px;background:#e8e8e8">
+  <label style="font-size:16px;margin-left:49px;margin-top:10px">用户登录</label>
+  <form action="/user/login" method="post">
+    <div class="form-group" style="margin:0 auto;width:80%">
+      <label for="forusername">账号:</label>
+      <input type="text" name="name" class="form-control" id="forusername" placeholder="用户名">
+    </div>
+
+    <div class="form-group" style="margin:0 auto;width:80%">
+      <label for="exampleInputPassword1">密码:</label>
+      <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="密码">
+    </div>
+    <button style="margin-left:49px;width:100px;margin-top:15px" type="submit" class="btn btn-default">登录</button>
+  </form>
+</div>
+
+<style>
+  body{
+    background: url("/assets/bkg2.png");
+  }
+</style>
